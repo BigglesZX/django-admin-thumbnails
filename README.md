@@ -29,7 +29,7 @@ class Person(models.Model):
     # ...
 ```
 
-In the simplest use-case, to add a thumbnail field to the bottom of the admin form, simply decorate the `ModelAdmin` or `*Inline` class, supplying the name of the field from which the thumbnail will be taken:
+In the simplest use-case, to add a thumbnail field to the bottom of the admin form, simply decorate the `ModelAdmin` or `*Inline` class (the order of decorators is important), supplying the name of the field from which the thumbnail will be taken:
 
 ```python
 import admin_thumbnails
