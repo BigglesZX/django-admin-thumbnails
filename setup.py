@@ -11,7 +11,7 @@ del os.link
 from setuptools import setup, find_packages  # noqa: E402
 
 
-VERSION = '.'.join(('0', '1', '0'))
+VERSION = '.'.join(('0', '1', '1'))
 
 DESCRIPTION = 'A Django app for DRY thumbnails in admin list views and forms.'
 
@@ -50,8 +50,10 @@ setup(
     install_requires=['Django<2.0'],
     extras_require={
         'dev': [
-            'twine',
-            'flake8',
+            'flake8>=3.7.7',
+            'setuptools>=41.0.0',
+            'twine>=1.13.0',
+            'wheel>=0.33.1',
         ]
     },
     classifiers=CLASSIFIERS
