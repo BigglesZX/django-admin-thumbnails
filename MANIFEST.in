@@ -1,0 +1,2 @@
+include README.md
+recursive-include admin_thumbnails *.py
