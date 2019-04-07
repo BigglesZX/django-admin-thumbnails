@@ -14,11 +14,11 @@ $ pip install django-admin-thumbnails
 
 ## Usage
 
-The app adds fields to your `ModelAdmin` class; one for each thumbnail you want to display. These are appended to the class's `readonly_fields` tuple (unless you specify otherwise) so they will be displayed at the bottom of your admin form, or you can include them by name in your `fieldsets` or `list_display` definitions.
+The app adds fields to your `ModelAdmin` or `*Inline` class; one for each thumbnail you want to display. These are appended to the class's `readonly_fields` tuple (unless you specify otherwise) so they will be displayed at the bottom of your admin form, or you can include them by name in your `fieldsets` or `list_display` definitions.
 
 `django-admin-thumbnails` will handle `ImageField`, `FileField` (so you can use SVG, for example) and (if `easy_thumbnails` is installed) `ThumbnailerImageField`. In the latter case a thumbnail alias will be used, which you can specify in settings.
 
-To create an admin thumbnail field, decorate your `ModelAdmin` class and optionally specify what to do with the newly created field.
+To create an admin thumbnail field, decorate your `ModelAdmin` or `*Inline` class and optionally specify what to do with the newly created field.
 
 Assuming a model like the following:
 
@@ -29,7 +29,7 @@ class Person(models.Model):
     # ...
 ```
 
-In the simplest use-case, to add a thumbnail field to the bottom of the admin form, simply decorate the `ModelAdmin` class, supplying the name of the field from which the thumbnail will be taken:
+In the simplest use-case, to add a thumbnail field to the bottom of the admin form, simply decorate the `ModelAdmin` or `*Inline` class, supplying the name of the field from which the thumbnail will be taken:
 
 ```python
 import admin_thumbnails
@@ -40,7 +40,7 @@ class PersonAdmin(admin.ModelAdmin):
     pass
 ```
 
-This will add a field called `image_thumbnail` (`FOO_thumbnail` where `FOO` is the origin field's name) to your `ModelAdmin` definition. To override the title given to the new field, pass a second string argument to the decorator:
+This will add a field called `image_thumbnail` (`FOO_thumbnail` where `FOO` is the origin field's name) to your `ModelAdmin` or `*Inline` definition. To override the title given to the new field, pass a second string argument to the decorator:
 
 ```python
 @admin_thumbnails.thumbnail('image', 'Thumbnail')
@@ -85,17 +85,6 @@ If your field contains images that are designed to be shown on a dark background
 @admin_thumbnails.thumbnail('image', background=True)
 ```
 
-Finally, if you want to control the name of the created thumbnail field and manage `readonly_fields` etc yourself, you can use the function form of `thumbnail` rather than the decorator:
-
-```python
-@admin.register(models.Person)
-class PersonAdmin(admin.ModelAdmin):
-    image_thumbnail_custom = \
-        admin_thumbnails.thumbnail('image', 'My Thumbnail', background=True)
-    list_display = ('name', 'image_thumbnail_custom')
-    readonly_fields = ('image_thumbnail_custom', )
-```
-
 ## Configuration
 
 ### `ADMIN_THUMBNAIL_DEFAULT_LABEL`
@@ -103,6 +92,12 @@ class PersonAdmin(admin.ModelAdmin):
 **Default:** `'Preview'`
 
 Setting this overrides the default column name / title used by thumbnails.
+
+### `ADMIN_THUMBNAIL_FIELD_SUFFIX`
+
+**Default:** `'_thumbnail'`
+
+Setting this overrides the suffix given to newly created thumbnail fields. Change if you have collision issues with other field names you want to use. Don't forget to update `list_display` and/or `fieldsets` in your `ModelAdmin` as necessary.
 
 ### `ADMIN_THUMBNAIL_THUMBNAIL_ALIAS`
 

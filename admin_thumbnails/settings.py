@@ -7,6 +7,13 @@ from django.conf import settings
 ADMIN_THUMBNAIL_DEFAULT_LABEL = \
     getattr(settings, 'ADMIN_THUMBNAIL_DEFAULT_LABEL', 'Preview')
 
+
+''' Sets the suffix used for the newly created thumbnail fields, e.g. `image`
+    becomes `image_thumbnail` if this setting is `_thumbnail`
+'''
+ADMIN_THUMBNAIL_FIELD_SUFFIX = \
+    getattr(settings, 'ADMIN_THUMBNAIL_FIELD_SUFFIX', '_thumbnail')
+
 ''' If `easy_thumbnails` is available, model fields using
     `ThumbnailerImageField` will be displayed using this thumbnail alias (which
     must be specified within `THUMBNAIL_ALIASES` in site settings)

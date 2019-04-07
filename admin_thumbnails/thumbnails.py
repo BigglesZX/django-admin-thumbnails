@@ -4,12 +4,13 @@ from __future__ import unicode_literals
 from django.contrib.admin.options import BaseModelAdmin
 from django.db.models import FileField
 from django.utils.safestring import mark_safe
-from inspect import isclass
 
-from .settings import (ADMIN_THUMBNAIL_DEFAULT_LABEL,
-                       ADMIN_THUMBNAIL_THUMBNAIL_ALIAS,
+from .settings import (ADMIN_THUMBNAIL_BACKGROUND_STYLE,
+                       ADMIN_THUMBNAIL_DEFAULT_LABEL,
+                       ADMIN_THUMBNAIL_FIELD_SUFFIX,
                        ADMIN_THUMBNAIL_STYLE,
-                       ADMIN_THUMBNAIL_BACKGROUND_STYLE)
+                       ADMIN_THUMBNAIL_THUMBNAIL_ALIAS)
+from .utils import unpack_styles
 
 
 try:
@@ -18,104 +19,63 @@ except ImportError:
     ThumbnailerImageField = None
 
 
-def thumbnail_factory(*args, **kwargs):
-    MODE_DECORATOR = 'decorator'
-    MODE_FUNCTION = 'function'
+def thumbnail_decorator(field_name, *args, **kwargs):
+    ''' optional label arg '''
+    try:
+        label = args[0]
+    except IndexError:
+        label = ADMIN_THUMBNAIL_DEFAULT_LABEL
 
-    label = ADMIN_THUMBNAIL_DEFAULT_LABEL
+    ''' gather other arguments '''
     background = kwargs.get('background', False)
     append = kwargs.get('append', True)
 
-    ''' initial args validation '''
-    if not args:
-        raise TypeError(
-            'admin_thumbnails.thumbnail: Either an subclass of BaseModelAdmin '
-            'or a field name must be supplied as an argument'
-        )
-
-    ''' determine whether `thumbnail_factory` used as decorator or function '''
-    if isclass(args[0]):
-        mode = MODE_DECORATOR
-        cls = args[0]
-
+    def _model_admin_wrapper(admin_class):
         ''' validate supplied class '''
-        if not issubclass(cls, BaseModelAdmin):
+        if not issubclass(admin_class, BaseModelAdmin):
             raise ValueError(
-                'admin_thumbnails.thumbnail: Supplied class must be a '
-                'subclass of django.contrib.admin.options.BaseModelAdmin'
+                'admin_thumbnails: Wrapped class must be a subclass of '
+                'django.contrib.admin.options.BaseModelAdmin'
             )
 
-        ''' ensure field name has been supplied '''
-        try:
-            field_name = args[1]
-        except IndexError:
-            raise TypeError(
-                'admin_thumbnails.thumbnail: Decorator must be passed the '
-                'desired source field name as an argument'
+        ''' define the thumbnail field method using the above configuration '''
+        def thumbnail_field(self, obj):
+            field = obj._meta.get_field(field_name)
+            field_value = getattr(obj, field_name)
+            if not field_value:
+                return ''
+
+            ''' determine the image url based on the field type '''
+            if (ThumbnailerImageField and
+                    isinstance(field, ThumbnailerImageField) and
+                    hasattr(field_value, ADMIN_THUMBNAIL_THUMBNAIL_ALIAS)):
+                url = field_value[ADMIN_THUMBNAIL_THUMBNAIL_ALIAS].url
+            elif isinstance(field, FileField):
+                url = field_value.url
+            else:
+                raise TypeError(
+                    'admin_thumbnails: Specified field must be an instance of '
+                    'Django’s `ImageField`, `FileField` or easy_thumbnails’ '
+                    '`ThumbnailerImageField` (received: {0})'.format(
+                        field.get_internal_name())
+                )
+
+            ''' generate styles and build <img> tag '''
+            style = dict(ADMIN_THUMBNAIL_STYLE)
+            if background:
+                style.update(ADMIN_THUMBNAIL_BACKGROUND_STYLE)
+            return mark_safe(
+                '<img src="{0}" style="{1}" alt="Thumbnail">'.format(
+                    url, unpack_styles(style))
             )
+        thumbnail_field.short_description = label
 
-        ''' optional label argument '''
-        try:
-            label = args[2]
-        except IndexError:
-            pass
-    else:
-        mode = MODE_FUNCTION
+        ''' augment the supplied class '''
+        new_field_name = '{0}{1}'.format(field_name,
+                                         ADMIN_THUMBNAIL_FIELD_SUFFIX)
+        setattr(admin_class, new_field_name, thumbnail_field)
+        if append:
+            admin_class.readonly_fields = admin_class.readonly_fields + (new_field_name, )  # noqa: E501
+        return admin_class
 
-        ''' ensure field name has been supplied '''
-        try:
-            field_name = args[0]
-        except IndexError:
-            raise TypeError(
-                'admin_thumbnails.thumbnail: Function must be passed the '
-                'desired source field name as an argument'
-            )
-
-        ''' optional label argument '''
-        try:
-            label = args[1]
-        except IndexError:
-            pass
-
-    ''' define the thumbnail field method using the above configuration '''
-    def admin_thumbnail(self, obj):
-        field = obj._meta.get_field(field_name)
-        field_value = getattr(obj, field_name)
-        if not field_value:
-            return ''
-
-        if (isinstance(field, ThumbnailerImageField) and
-                hasattr(field_value, ADMIN_THUMBNAIL_THUMBNAIL_ALIAS)):
-            url = field_value[ADMIN_THUMBNAIL_THUMBNAIL_ALIAS].url
-        elif isinstance(field, FileField):
-            url = field_value.url
-        else:
-            raise TypeError(
-                'admin_thumbnails.thumbnail: Field supplied must be an '
-                'instance of Django’s `ImageField`, `FileField` or '
-                'easy_thumbnails’ `ThumbnailerImageField` (received: {0})'
-                .format(field.get_internal_name())
-            )
-
-        style = unpack_styles(ADMIN_THUMBNAIL_STYLE) + (
-            unpack_styles(ADMIN_THUMBNAIL_BACKGROUND_STYLE) if background else '')  # noqa: E501
-        return mark_safe(
-            '<img src="{0}" style="{1}" alt="Thumbnail">'.format(url, style)
-        )
-    admin_thumbnail.short_description = label
-
-    ''' if function mode, a simple return '''
-    if mode == MODE_FUNCTION:
-        return admin_thumbnail
-
-    ''' otherwise decorate the supplied class '''
-    new_field_name = '{0}_thumbnail'.format(field_name)
-    setattr(cls, new_field_name, admin_thumbnail.__func__)
-    if append:
-        cls.readonly_fields = cls.readonly_fields + (new_field_name, )
-    return cls
-
-
-def unpack_styles(styles):
-    ''' combine a dictionary of CSS property/value pairs into a string '''
-    return '; '.join([': '.join(i) for i in styles.iteritems()])
+    return _model_admin_wrapper
