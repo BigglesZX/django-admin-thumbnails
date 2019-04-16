@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.1.2 (April 16th, 2019)
+--------------------------
+
+* New: Added `alias` parameter.
+* Fixed: `easy_thumbnails` aliases are now correctly checked for validity; would always fail and default to original image url previously.
+
 0.1.1 (April 7th, 2019)
 --------------------------
 

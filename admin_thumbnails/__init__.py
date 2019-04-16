@@ -15,8 +15,10 @@ from .utils import unpack_styles
 
 try:
     from easy_thumbnails.fields import ThumbnailerImageField
+    from easy_thumbnails.alias import aliases
 except ImportError:
     ThumbnailerImageField = None
+    aliases = None
 
 
 def thumbnail(field_name, *args, **kwargs):
@@ -33,6 +35,7 @@ def thumbnail(field_name, *args, **kwargs):
     ''' gather other arguments '''
     background = kwargs.get('background', False)
     append = kwargs.get('append', True)
+    alias = kwargs.get('alias', ADMIN_THUMBNAIL_THUMBNAIL_ALIAS)
 
     def _model_admin_wrapper(admin_class):
         ''' validate supplied class '''
@@ -49,11 +52,14 @@ def thumbnail(field_name, *args, **kwargs):
             if not field_value:
                 return ''
 
-            ''' determine the image url based on the field type '''
+            ''' determine the image url based on the field type - in the case
+                of `ThumbnailerImageField` instances, check the alias given
+                against the list of available aliases from `easy_thumbnails`
+            '''
             if (ThumbnailerImageField and
                     isinstance(field, ThumbnailerImageField) and
-                    hasattr(field_value, ADMIN_THUMBNAIL_THUMBNAIL_ALIAS)):
-                url = field_value[ADMIN_THUMBNAIL_THUMBNAIL_ALIAS].url
+                    aliases.get(alias)):
+                url = field_value[alias].url
             elif isinstance(field, FileField):
                 url = field_value.url
             else:

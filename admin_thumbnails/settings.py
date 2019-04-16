@@ -16,7 +16,7 @@ ADMIN_THUMBNAIL_FIELD_SUFFIX = \
 
 ''' If `easy_thumbnails` is available, model fields using
     `ThumbnailerImageField` will be displayed using this thumbnail alias (which
-    must be specified within `THUMBNAIL_ALIASES` in site settings)
+    must be specified within `THUMBNAIL_ALIASES` in site settings) by default
 '''
 ADMIN_THUMBNAIL_THUMBNAIL_ALIAS = \
     getattr(settings, 'ADMIN_THUMBNAIL_THUMBNAIL_ALIAS', 'admin_thumbnail')

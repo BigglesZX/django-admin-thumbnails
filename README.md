@@ -77,12 +77,18 @@ class PersonAdmin(admin.ModelAdmin):
     list_display = ('name', 'image_thumbnail')
 ```
 
-This isn't necessary if you're using `fieldsets`, as you can control the inclusion (or omission) and position of the thumbnail field.
+This isn't necessary if you're using `fieldsets`, as by doing so you will control the inclusion (or omission) and position of the thumbnail field.
 
 If your field contains images that are designed to be shown on a dark background, you can supply `background=True` to the decorator to add one to the thumbnail (via CSS) when displayed:
 
 ```python
 @admin_thumbnails.thumbnail('image', background=True)
+```
+
+If you're using `easy_thumbnails` and want to override the alias used to generate your thumbnail on a per-field basis (as opposed to using the `ADMIN_THUMBNAIL_THUMBNAIL_ALIAS` setting; see below), you can use the `alias` argument to the decorator:
+
+```python
+@admin_thumbnails.thumbnail('image', alias='admin_thumbnail_alternative')
 ```
 
 ## Configuration
