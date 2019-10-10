@@ -6,6 +6,15 @@ A Django app to assist in adding thumbnails for your model's image fields to adm
 
 When working with models that include `ImageField`s, `FileField`s or when using `ThumbnailerImageField` from `easy_thumbnails`, it can often be desirable to include a thumbnail preview of the field as part of the admin form, fieldset or in list views. Various methods to achieve this exist but all seem to involve a degree of duplication. I've made a few attempts to DRY out such code over the years and this library represents my most recent solution. So, please enjoy!
 
+## Compatibility
+
+As I've only recently started migrating my projects to Django 2 / Python 3, the below is only a guide – however I expect it to be mostly accurate.
+
+|                | Django 1.10   | 1.11 | 2.0 | 2.1 | 2.2 |
+|---------------:|:-------------:|:----:|:---:|:---:|:---:|
+| **Python** 2.7 | ✔             | ✔    |     |     |     |
+| 3.6            | ✔             | ✔    | ✔   | ✔   | ✔   |
+
 ## Installation
 
 ```
