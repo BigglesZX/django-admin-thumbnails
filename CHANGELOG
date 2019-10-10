@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2.1 (October 10th, 2019)
+0.2.2 (October 10th, 2019)
 --------------------------
 
 * Fixed: Django version in package requirements
