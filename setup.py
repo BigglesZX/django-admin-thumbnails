@@ -2,8 +2,16 @@
 
 ''' XXX: allow dist building on vagrant
     source: http://bugs.python.org/issue8876
-    to build: $ python setup.py register sdist
-    then: $ twine upload dist/*
+
+    To make a new release:
+    1. Bump version number in setup.py
+    2. Update CHANGELOG
+    3. $ git commit ...
+    4. $ git tag -a x.x.x  # see `git tags` for latest
+    5. $ git push origin master
+    6. $ git push --tags
+    7. $ python setup.py register sdist
+    8. $ twine upload dist/*
 '''
 import os
 del os.link
