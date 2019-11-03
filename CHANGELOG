@@ -1,10 +1,15 @@
 Changelog
 =========
 
+0.2.3 (November 3rd, 2019)
+--------------------------
+
+* Fixed: Character encoding error when running setup.py on certain platforms.
+
 0.2.2 (October 10th, 2019)
 --------------------------
 
-* Fixed: Django version in package requirements
+* Fixed: Django version in package requirements.
 
 0.2.0 (October 10th, 2019)
 --------------------------
