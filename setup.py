@@ -58,7 +58,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     python_requires='>=2.6,<4',
-    install_requires=['Django>=1.10', 'six==1.12.0'],
+    install_requires=['Django>=1.10', 'six>=1.12.0'],
     extras_require={
         'dev': [
             'flake8>=3.7.7',
