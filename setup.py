@@ -19,7 +19,7 @@ del os.link
 from setuptools import setup, find_packages  # noqa: E402
 
 
-VERSION = '.'.join(('0', '2', '3'))
+VERSION = '.'.join(('0', '2', '4'))
 
 DESCRIPTION = 'A Django app for DRY thumbnails in admin list views and forms.'
 

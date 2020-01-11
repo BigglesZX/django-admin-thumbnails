@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.4 (January 11th, 2020)
+--------------------------
+
+* Fixed: Relaxed dependency on six, for improved compatibility and ease of installation. With thanks to @nschlemm.
+
 0.2.3 (November 3rd, 2019)
 --------------------------
 
