@@ -10,10 +10,10 @@ When working with models that include `ImageField`s, `FileField`s or when using 
 
 As I've only recently started migrating my projects to Django 2 / Python 3, the below is only a guide – however I expect it to be mostly accurate.
 
-|                | Django 1.10   | 1.11 | 2.0 | 2.1 | 2.2 |
-|---------------:|:-------------:|:----:|:---:|:---:|:---:|
-| **Python** 2.7 | ✔             | ✔    |     |     |     |
-| 3.6            | ✔             | ✔    | ✔   | ✔   | ✔   |
+|                | Django 1.10   | 1.11 | 2.0 | 2.1 | 2.2 | 3.0 |
+|---------------:|:-------------:|:----:|:---:|:---:|:---:|:---:|
+| **Python** 2.7 | ✔             | ✔    |     |     |     |     |
+| 3.6            | ✔             | ✔    | ✔   | ✔   | ✔   | ✔   |
 
 ## Installation
 
