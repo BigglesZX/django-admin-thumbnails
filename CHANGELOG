@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.5 (April 9th, 2020)
+--------------------------
+
+* Indicating compatibility with Django 3.0
+
 0.2.4 (January 11th, 2020)
 --------------------------
 

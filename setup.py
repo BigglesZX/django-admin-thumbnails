@@ -19,7 +19,7 @@ del os.link
 from setuptools import setup, find_packages  # noqa: E402
 
 
-VERSION = '.'.join(('0', '2', '4'))
+VERSION = '.'.join(('0', '2', '5'))
 
 DESCRIPTION = 'A Django app for DRY thumbnails in admin list views and forms.'
 
@@ -40,6 +40,7 @@ CLASSIFIERS = [
     'Framework :: Django :: 2.0',
     'Framework :: Django :: 2.1',
     'Framework :: Django :: 2.2',
+    'Framework :: Django :: 3.0',
 ]
 
 setup(
