@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.6 (June 17th, 2021)
+--------------------------
+
+* Indicating compatibility with Django 3.1 and 3.2
+
 0.2.5 (April 9th, 2020)
 --------------------------
 
