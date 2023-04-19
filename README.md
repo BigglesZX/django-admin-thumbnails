@@ -10,10 +10,11 @@ When working with models that include `ImageField`s, `FileField`s or when using 
 
 I've not exhaustively tested all the below combinations, however I believe this table to be accurate.
 
-|                | Django 1.10   | 1.11 | 2.0 | 2.1 | 2.2 | 3.0 | 3.1 | 3.2 |
-|---------------:|:-------------:|:----:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Python** 2.7 | ✔             | ✔    |     |     |     |     |     |     |
-| 3.6            | ✔             | ✔    | ✔   | ✔   | ✔   | ✔   | ✔   | ✔   |
+|                | Django 1.10 | 1.11 | 2.0 | 2.1 | 2.2 | 3.0 | 3.1 | 3.2 | 4.0 | 4.1 | 4.2 |
+| -------------: | :---------: | :--: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| **Python** 2.7 |      ✔      |  ✔   |     |     |     |     |     |     |     |     |     |
+|            3.6 |      ✔      |  ✔   |  ✔  |  ✔  |  ✔  |  ✔  |  ✔  |  ✔  |     |     |     |
+|         >= 3.8 |             |      |     |     |     |  ✔  |  ✔  |  ✔  |  ✔  |  ✔  |  ✔  |
 
 ## Installation
 
@@ -26,6 +27,8 @@ $ pip install django-admin-thumbnails
 The app adds fields to your `ModelAdmin` or `*Inline` class; one for each thumbnail you want to display. These are appended to the class's `readonly_fields` tuple (unless you specify otherwise) so they will be displayed at the bottom of your admin form, or you can include them by name in your `fieldsets` or `list_display` definitions.
 
 `django-admin-thumbnails` will handle `ImageField`, `FileField` (so you can use SVG, for example) and (if `easy_thumbnails` is installed) `ThumbnailerImageField`. In the latter case a thumbnail alias will be used, which you can specify in settings.
+
+### Basic usage
 
 To create an admin thumbnail field, decorate your `ModelAdmin` or `*Inline` class and optionally specify what to do with the newly created field.
 
@@ -77,6 +80,8 @@ class PersonAdmin(admin.ModelAdmin):
     )
 ```
 
+### Using thumbnails in the list view only
+
 By default the new field will be appended to the `readonly_fields` tuple – if this is undesirable (e.g. if you want to include the thumbnail in the list view but _not_ in the default form fields), pass `append=False` to the decorator:
 
 ```python
@@ -87,6 +92,26 @@ class PersonAdmin(admin.ModelAdmin):
 ```
 
 This isn't necessary if you're using `fieldsets`, as by doing so you will control the inclusion (or omission) and position of the thumbnail field.
+
+### Using a property on the model as the thumbnail source
+
+As of version 0.2.7, the name passed to the `thumbnail` decorator can refer to a property on the model rather than a field. For example:
+
+```python
+class Person(models.Model):
+    # ...
+    @property
+    def primary_image(self):
+        if self.images.count():
+            return self.images.first().image
+        return None
+```
+
+Provided the specified property returns an instance of a `FieldFile` (i.e. a file stored in a field that is an instance of Django's `ImageField`, `FileField`, or `easy_thumbnails`' `ThumbnailerImageField`), this will work as normal.
+
+This also works with Django's [`cached_property`](https://docs.djangoproject.com/en/dev/ref/utils/#django.utils.functional.cached_property) decorator.
+
+### Adding a background to displayed thumbnails
 
 If your field contains images that are designed to be shown on a dark background, you can supply `background=True` to the decorator to add one to the thumbnail (via CSS) when displayed:
 
@@ -132,7 +157,7 @@ A dictionary of CSS property/value pairs that will be added to the `style` attri
 
 A dictionary of CSS property/value pairs added when the `background=True` option is used (see **Usage** above). Override to supply your own styles. Note that these styles are used _in addition_ to any defined in `ADMIN_THUMBNAIL_STYLE`.
 
-## Development Installation
+## Development installation
 
 If working locally on the package you can install the development tools via `pip`:
 
@@ -146,6 +171,6 @@ To lint with `flake8`:
 $ flake8
 ```
 
-## Issues, Suggestions, Contributions
+## Issues, suggestions, contributions
 
 ...are welcome on GitHub. Thanks for your interest in `django-admin-thumbnails`!

@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from django.contrib.admin.options import BaseModelAdmin
 from django.db.models import FileField
+from django.db.models.fields.files import FieldFile
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 
 from .settings import (ADMIN_THUMBNAIL_BACKGROUND_STYLE,
@@ -47,8 +49,27 @@ def thumbnail(field_name, *args, **kwargs):
 
         ''' define the thumbnail field method using the above configuration '''
         def thumbnail_field(self, obj):
-            field = obj._meta.get_field(field_name)
-            field_value = getattr(obj, field_name)
+            if isinstance(getattr(type(obj), field_name, None), property) or isinstance(getattr(type(obj), field_name, None), cached_property):  # noqa: E501
+                ''' the supplied field_name is a property of the of model '''
+                value = getattr(obj, field_name)
+                if not isinstance(value, FieldFile):
+                    raise TypeError(
+                        'admin_thumbnails: Found a model property matching the'
+                        ' supplied field name, but it did not return an '
+                        'instance of `FieldFile` or a descendent. If using a '
+                        'property as the thumbnail source, it must return a '
+                        'value from a field that is an instance of Django’s '
+                        '`ImageField`, `FileField` or easy_thumbnails’ '
+                        '`ThumbnailerImageField` (received: {0})'.format(
+                            type(value))
+                    )
+                field = value.field
+                field_value = value
+            else:
+                ''' default: access field_name as a field on the model '''
+                field = obj._meta.get_field(field_name)
+                field_value = getattr(obj, field_name)
+
             if not field_value:
                 return ''
 

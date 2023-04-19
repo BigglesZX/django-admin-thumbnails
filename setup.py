@@ -2,8 +2,15 @@
 
 ''' XXX: allow dist building on vagrant
     source: http://bugs.python.org/issue8876
+'''
+import os
+del os.link
 
-    To make a new release:
+from setuptools import setup, find_packages  # noqa: E402
+
+
+''' To make a new release:
+
     1. Bump version number in setup.py
     2. Update CHANGELOG
     3. $ git commit ...
@@ -13,13 +20,8 @@
     7. $ python setup.py register sdist
     8. $ twine upload dist/*
 '''
-import os
-del os.link
 
-from setuptools import setup, find_packages  # noqa: E402
-
-
-VERSION = '.'.join(('0', '2', '6'))
+VERSION = '.'.join(('0', '2', '7'))
 
 DESCRIPTION = 'A Django app for DRY thumbnails in admin list views and forms.'
 

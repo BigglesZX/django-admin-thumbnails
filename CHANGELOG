@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.7 (April 19th, 2022)
+--------------------------
+
+* Indicating compatibility with Django 4.0, 4.1 and 4.2
+* New: The `image_field` argument to the `thumbnail` decorator now supports model properties
+
 0.2.6 (June 17th, 2021)
 --------------------------
 
