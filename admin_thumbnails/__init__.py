@@ -52,6 +52,10 @@ def thumbnail(field_name, *args, **kwargs):
             if isinstance(getattr(type(obj), field_name, None), property) or isinstance(getattr(type(obj), field_name, None), cached_property):  # noqa: E501
                 ''' the supplied field_name is a property of the of model '''
                 value = getattr(obj, field_name)
+
+                if value is None:
+                    return ''
+
                 if not isinstance(value, FieldFile):
                     raise TypeError(
                         'admin_thumbnails: Found a model property matching the'
@@ -63,6 +67,7 @@ def thumbnail(field_name, *args, **kwargs):
                         '`ThumbnailerImageField` (received: {0})'.format(
                             type(value))
                     )
+
                 field = value.field
                 field_value = value
             else:

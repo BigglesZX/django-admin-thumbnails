@@ -21,7 +21,7 @@ from setuptools import setup, find_packages  # noqa: E402
     8. $ twine upload dist/*
 '''
 
-VERSION = '.'.join(('0', '2', '7'))
+VERSION = '.'.join(('0', '2', '8'))
 
 DESCRIPTION = 'A Django app for DRY thumbnails in admin list views and forms.'
 
@@ -45,6 +45,9 @@ CLASSIFIERS = [
     'Framework :: Django :: 3.0',
     'Framework :: Django :: 3.1',
     'Framework :: Django :: 3.2',
+    'Framework :: Django :: 4.0',
+    'Framework :: Django :: 4.1',
+    'Framework :: Django :: 4.2',
 ]
 
 setup(

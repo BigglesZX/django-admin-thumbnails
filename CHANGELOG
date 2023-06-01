@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.8 (June 1st, 2023)
+--------------------------
+
+* Fixed: Referencing a property on the target model that returns `None` no longer causes an exception
+
 0.2.7 (April 19th, 2022)
 --------------------------
 
