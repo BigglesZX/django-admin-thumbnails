@@ -21,7 +21,7 @@ from setuptools import setup, find_packages  # noqa: E402
     8. $ twine upload dist/*
 '''
 
-VERSION = '.'.join(('0', '2', '8'))
+VERSION = '.'.join(('0', '2', '9'))
 
 DESCRIPTION = 'A Django app for DRY thumbnails in admin list views and forms.'
 

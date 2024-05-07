@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.9 (May 7th, 2024)
+--------------------------
+
+* Fixed: Updated README to reflect best practice when using a property on the model as the thumbnail source (with thanks to @jasongi).
+
 0.2.8 (June 1st, 2023)
 --------------------------
 
