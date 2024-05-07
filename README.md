@@ -102,8 +102,9 @@ class Person(models.Model):
     # ...
     @property
     def primary_image(self):
-        if self.images.count():
-            return self.images.first().image
+        first_image = self.images.first()
+        if first_image:
+            return first_image.image
         return None
 ```
 
