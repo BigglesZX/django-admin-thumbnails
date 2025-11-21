@@ -8,13 +8,19 @@ When working with models that include `ImageField`s, `FileField`s or when using 
 
 ## Compatibility
 
-I've not exhaustively tested all the below combinations, however I believe this table to be accurate.
+The widget has been tested on all Python/Django version combinations [officially supported](https://docs.djangoproject.com/en/5.2/faq/install/#what-python-version-can-i-use-with-django) by the Django project:
 
-|                | Django 1.10 | 1.11 | 2.0 | 2.1 | 2.2 | 3.0 | 3.1 | 3.2 | 4.0 | 4.1 | 4.2 |
-| -------------: | :---------: | :--: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| **Python** 2.7 |      ✔      |  ✔   |     |     |     |     |     |     |     |     |     |
-|            3.6 |      ✔      |  ✔   |  ✔  |  ✔  |  ✔  |  ✔  |  ✔  |  ✔  |     |     |     |
-|         >= 3.8 |             |      |     |     |     |  ✔  |  ✔  |  ✔  |  ✔  |  ✔  |  ✔  |
+|                | Django 4.2 | 5.0 | 5.1 | 5.2 |
+|---------------:|:----------:|:---:|:---:|:---:|
+| **Python 3.8** | ✔          |     |     |     |
+| **3.9**        | ✔          |     |     |     |
+| **3.10**       | ✔          | ✔   | ✔   | ✔   |
+| **3.11**       | ✔          | ✔   | ✔   | ✔   |
+| **3.12**       | ✔          | ✔   | ✔   | ✔   |
+| **3.13**       |            |     | ✔   | ✔   |
+| **3.14**       |            |     |     | ✔   |
+
+If you need to use `django-admin-thumbnails` with Django 3, please use a version of the package prior to `1.0.0`.
 
 ## Installation
 
@@ -158,7 +164,7 @@ A dictionary of CSS property/value pairs that will be added to the `style` attri
 
 A dictionary of CSS property/value pairs added when the `background=True` option is used (see **Usage** above). Override to supply your own styles. Note that these styles are used _in addition_ to any defined in `ADMIN_THUMBNAIL_STYLE`.
 
-## Development installation
+## Development
 
 If working locally on the package you can install the development tools via `pip`:
 
@@ -166,10 +172,22 @@ If working locally on the package you can install the development tools via `pip
 $ pip install -e .[dev]
 ```
 
-To lint with `flake8`:
+Run the bundled Django example project:
 
 ```shell
-$ flake8
+$ cd example_project
+$ python manage.py runserver 0.0.0.0:8000
+$ open http://localhost:8000/admin/
+```
+
+Log in with the username `admin` and the password `admin`.
+
+Navigate to the example `Book` model in the `Bookshop` app to see the widget in action.
+
+Run the basic test suite across environments using `tox`:
+
+```shell
+$ tox run
 ```
 
 ## Issues, suggestions, contributions
